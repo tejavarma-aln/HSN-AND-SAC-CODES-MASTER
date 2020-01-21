@@ -9,7 +9,7 @@
 ** Press Alt+c to Add New Code and Description While Entering HSN/SAC Code
 
 
-**Getting Started:
+## Getting Started:
 
 ** Download HsnDesc.xml and HsnandSacList.txt(TDL) Files
 ** Place HsnDesc.xml in the Tally Working Directory (Tally Current Working Folder/Path)
