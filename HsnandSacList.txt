@@ -1,0 +1,107 @@
+
+
+;; HSN AND DESCRIPTION MASTER WITH PREDEFINED LIST OF HSN CODES.
+
+[Collection:HsnCodesXmlCollection]
+	Data Source:File XML :"HsnDesc.xml"
+	XML Object Path : HSNOBJECT : 1 : HSNCOLLECTION
+	Client Only:Yes
+
+[Collection:HsnCodesSubColl]
+	
+	Source Collection:HsnCodesXmlCollection
+	Compute:HSN:$HSN
+	Compute:DESC:$DESC
+	
+
+[#Field:GST ClassfnMst Code]
+	Table:HsnTableColl,NotApplicable
+    Show Table:On Empty
+	Key:CREATEUSERHSN
+	Tooltip:"Press ALT+ C to Create New HSN Code"
+	
+[#Field:GST ClassfnMst Desc]
+	Lines:5
+	Set Always:Yes
+	Set as:$$FilterValue:$DESC:HsnTableColl:1:OnlythatDesc
+	
+[System:Formulae]
+	OnlythatDesc:$HSN = #GSTClassfnMstCode
+
+[Collection:HsnTableColl]
+Title:$$LocaleString:"List of Hsn Codes"
+Align:Right
+Full Height:Yes
+Source Collection:USERENTERHSNCOLL,HsnCodesXmlCollection
+Fetch :Hsn,Desc
+Format:$Hsn,25
+Unique:$HSN
+
+
+
+[Key:CREATEUSERHSN]
+	Key:Alt+C
+	Action:Alter:HSNMASTERREPORT
+	Mode:Edit
+
+;;;;;;;;;;;;;;;;;;;;;; Report for Storing HSN CODES And DESCRIPTIONS
+
+
+[#Menu:GateWayOfTally]
+	Add:Key Item:HSN AND DESC MASTER:H:Alter:HSNMASTERREPORT
+
+ 
+[Report:HSNMASTERREPORT]
+	Object:Company
+	Form:HSNMASTERREPORT
+	Title:$$LocaleString:"HSN MASTER CREATION"
+	
+[Form:HSNMASTERREPORT]
+	Part:HSNMASTERREPORT
+	Width:50% page
+	
+[Part:HSNMASTERREPORT]
+	Line:HSNMASTERREPORTTITLES,HSNMASTERREPORTLINE
+	Repeat:HSNMASTERREPORTLINE:USERHSNDESCAGGR
+	Scroll:Both
+	Break:$$IsEmpty:#HsndataInput
+	Background:white
+	
+[Line:HSNMASTERREPORTTITLES]
+	Field:Name Field,Simple Field
+	Border:thickbottom
+	Local:Field:Name Field:Info:$$LocaleString:"HSN CODE"
+	Local:Field:Simple Field:Set as:$$LocaleString:"DESCRIPTION"
+	Local:Field:default:Align:Left
+	Local:Field:default:Style:Normal Bold
+
+[Line:HSNMASTERREPORTLINE]
+	Fields:HsndataInput,DescdataInput
+	Local:Field:default:Align:Left
+
+[Field:HsndataInput]
+	Use:Name Field
+	Storage:USERENTERHSN
+	
+[Field:DescdataInput]
+	Use:NameField
+	Storage:USERENTERDESC
+	Width:50
+	Notify:USERDESCINVALID:($$IsEmpty:$$Value) and NOT ($$IsEmpty:#HsndataInput)
+	Skip Forward:$$IsEmpty:#HsndataInput
+	
+[System:UDF]
+	USERHSNDESCAGGR:Aggregate:5678
+	USERENTERHSN:String:2000
+	USERENTERDESC:String:2500
+
+[System:Formulas]
+	USERDESCINVALID:"Description Not Filled!"+$$NewLine+"Are You Sure?"
+	
+
+[Collection:USERENTERHSNCOLL]
+	Type:USERHSNDESCAGGR:Company
+	Child Of:##SvCurrentCompany
+	Compute:HSN:$USERENTERHSN
+	Compute:DESC:$USERENTERDESC
+	
