@@ -2,7 +2,7 @@
 
 HighLights:
 
-->List of HSN and SAC Codes With Description and Option to Add New Codes
+->List of HSN and SAC Codes With Description and Option to Add New Codes \n
 ->You Can Select HSN/SAC Codes While Creating Stock Item , Description Will Be AutoFilled According the Code You Choose
 ->Comes With Collection Of 13500 + HSN/SAC Codes
 ->HSN/SAC Codes Stored in XML File Which Will be Read Into Table at Runtime
